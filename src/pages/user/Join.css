@@ -1,0 +1,102 @@
+h4 {
+    text-align: left;
+    border-bottom: #333;
+    border-style: solid;
+    border-width: 0px 0px 1px 0px;
+    padding-bottom: 15px;
+    width: 100% !important;
+}
+.container{
+    width: 60%;
+    min-width: 200px;
+}
+.join-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    padding: 20px;
+}
+
+.join-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 20px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.user-icon {
+    font-size: 50px;
+    color: lightskyblue;
+    margin-bottom: 20px;
+}
+
+.join-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input {
+    min-width: 60%;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.form-group input:focus {
+    border-color: lightskyblue;
+    outline: none;
+    box-shadow: 0 0 5px rgba(106, 17, 203, 0.2);
+}
+
+.invalid-feedback {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.btn {
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background: lightskyblue;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #4a0fb1;
+}
+
+.alert {
+    padding: 10px;
+    margin-top: 10px;
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+    font-size: 14px;
+}

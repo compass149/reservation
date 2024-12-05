@@ -1,5 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
-import logo from './logo.svg';
 import './App.css';
 import Navbar from './components/Navbar';
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
@@ -12,6 +11,7 @@ import Profile from './pages/user/Profile';
 import AuthGuard from './guards/AuthGuard';
 import { Role } from './models/Role';
 import Admin from './pages/admin/Admin';
+import RoomSelection from './pages/RoomSelection';
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
           <Route path='/home' element={<Home />}></Route>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/join' element={<Join />}></Route>
+          <Route path="/roomSelection" element={<RoomSelection />} />
           <Route path='/admin' element={
             <AuthGuard roles={[Role.ADMIN]}>
               <Admin />
