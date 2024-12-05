@@ -1,7 +1,7 @@
 import { Children } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
-import { setCurrentUser } from '../house/actions/user';
+import { setCurrentUser } from '../store/actions/user';
 
 const AuthGuard=({children, roles}) =>{
     const currentUser=useSelector(state => state.user);

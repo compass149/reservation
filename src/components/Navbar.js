@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearCurrentUser } from '../house/actions/user';
+import { clearCurrentUser } from '../store/actions/user';
 import { Role } from '../models/Role';
 
 const Navbar = () => {
@@ -16,10 +16,6 @@ const Navbar = () => {
     return(
         <nav className='navbar navbar-expand navbar-dark bg-dark'>
             <div className='container'>
-                <a href='https://react.dev' className='navbar-brand ms-1'>
-                    <img src={logo} className='App-logo' alt='logo' />
-                    React
-                </a>
                 <div className='navbar-nav me-auto'>
                     {currentUser?.role===Role.ADMIN &&
                         <li className='nav-item'>

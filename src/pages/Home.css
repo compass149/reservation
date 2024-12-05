@@ -1,0 +1,12 @@
+.home-card{
+    width: 300px;
+    background-color:#f8f7f7 ;
+}
+.product-icon{
+    font-size: 100px;
+    color: darkslateblue;
+}
+
+input{
+    width: 50px;
+}

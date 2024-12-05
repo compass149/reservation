@@ -1,5 +1,5 @@
 export default class User{
-    constructor(id, username, password, name, role, token, email, gender, createdAt, updatedAt,mobile) {
+    constructor(uid, username, password, name, role, token, email, gender, createdAt, updatedAt,mobile) {
         /**사용자 고유 ID (Primary Key)**/
         this.uid = uid;
         /**사용자 로그인 id**/

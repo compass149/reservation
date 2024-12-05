@@ -9,7 +9,7 @@ import Join from './pages/user/Join';
 import NotFound from './pages/not_found/NotFound';
 import UnAuthorized from './unauthorized/UnAuthorized';
 import Profile from './pages/user/Profile';
-import AuthGuard
+import AuthGuard from './guards/AuthGuard';
 import { Role } from './models/Role';
 import Admin from './pages/admin/Admin';
 
@@ -23,7 +23,7 @@ function App() {
           <Route path='/' element={<Home />}></Route>
           <Route path='/home' element={<Home />}></Route>
           <Route path='/login' element={<Login />}></Route>
-          <Route path='/register' element={<Register />}></Route>
+          <Route path='/join' element={<Join />}></Route>
           <Route path='/admin' element={
             <AuthGuard roles={[Role.ADMIN]}>
               <Admin />
