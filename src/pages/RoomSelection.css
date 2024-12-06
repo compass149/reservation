@@ -20,8 +20,8 @@
   }
   
   .room-card.selected {
-    border-color: #007bff;
-    background-color: #e9f5ff;
+    border-color: #898C2B;
+    background-color: #898c2b35;
   }
   
   .room-card-header {

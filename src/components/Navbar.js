@@ -3,6 +3,7 @@ import logo from '../logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentUser } from '../store/actions/user';
 import { Role } from '../models/Role';
+import "./Navbar.css"
 
 const Navbar = () => {
     const currentUser=useSelector((state) => state.user);
@@ -14,7 +15,7 @@ const Navbar = () => {
         naviget("/login")
     }
     return(
-        <nav className='navbar navbar-expand navbar-dark bg-dark'>
+        <nav className='navbar navbar-expand'>
             <div className='container'>
                 <div className='navbar-nav me-auto'>
                     {currentUser?.role===Role.ADMIN &&

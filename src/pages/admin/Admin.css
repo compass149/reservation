@@ -1,0 +1,101 @@
+/* Admin 컴포넌트 전체 컨테이너 스타일 */
+.container {
+    width: 80%; /* 화면의 80% */
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 20px;
+  }
+  
+  /* 카드 스타일 */
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+  
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #898C2B;
+    color: #fff;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .card-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  /* 테이블 스타일 */
+  .table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+  }
+  
+  .table th,
+  .table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px;
+    border: 1px solid #ddd;
+  }
+  
+  .table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+  }
+  
+  /* 버튼 스타일 */
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: #594815;
+    border-color: #594815;
+    color: #fff;
+  }
+  
+  .btn-primary:hover {
+    background-color: #777925;
+    border-color: #777925;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: #fff;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+  
+  /* 경고 메시지 스타일 */
+  .alert {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .alert-danger {
+    background-color: #f8d7da;
+    color: #842029;
+    border-color: #f5c2c7;
+  }
+  

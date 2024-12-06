@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import roomService from "../../services/room.service";
 import RoomSave from "../../components/RoomSave";
 import RoomDelete from "../../components/RoomDelete";
+import "./Admin.css"
 
 const Admin = () => {
     const [roomList, setRoomList] = useState([]);
