@@ -1,25 +1,27 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Modal } from 'react-bootstrap';
 import roomService from "../services/room.service";
-import Rooms from './../models/Rooms';  // 클래스 이름을 대문자로 시작하도록 수정
 
 const RoomSave = forwardRef((props, ref) => {
-    const [room, setRoom] = useState(new Rooms('', '', 0));
+    const [room, setRoom] = useState({ name: '', description: '', price: 50000, capacity: 4 });
     const [errorMessage, setErrorMessage] = useState('');
     const [show, setShow] = useState(false);
     const [submitted, setSubmitted] = useState(false);
 
-    // useImperativeHandle을 사용하여 ref에서 호출 가능한 메서드 정의
     useImperativeHandle(ref, () => ({
         showRoomModal() {
-            setShow(true);  // Modal을 열기 위한 함수
-        }
+            setShow(true);
+        },
     }));
 
     useEffect(() => {
         if (props.room) {
-            setRoom(props.room);
-            console.log(props.room);
+            setRoom({
+                name: props.room.name || '',
+                description: props.room.description || '',
+                price: props.room.price || 0,
+                capacity: props.room.capacity || 0,
+            });
         }
     }, [props.room]);
 
@@ -27,29 +29,29 @@ const RoomSave = forwardRef((props, ref) => {
         e.preventDefault();
         setSubmitted(true);
 
-        if (!room.name || !room.description || !room.price) {
+        if (!room.name || !room.description || room.price <= 0 || room.capacity <= 0) {
             return;
         }
 
         roomService.saveRoom(room)
             .then((response) => {
-                props.onSaved(response.data);  // 상위 컴포넌트에 저장 데이터 전달
+                props.onSaved(response.data);
                 setShow(false);
                 setSubmitted(false);
             })
             .catch((err) => {
-                setErrorMessage('제품 저장 시 오류 발생!');
-                console.log(err);
+                setErrorMessage('방 정보를 저장하는 중 오류가 발생했습니다.');
+                console.error(err);
             });
-        setRoom(new Rooms('', '', 0)); // 입력창 초기화
+
+        setRoom({ name: '', description: '', price: 0, capacity: 0 });
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-
         setRoom((prevState) => ({
             ...prevState,
-            [name]: value,
+            [name]: name === 'price' || name === 'capacity' ? Number(value) : value,
         }));
     };
 
@@ -57,40 +59,52 @@ const RoomSave = forwardRef((props, ref) => {
         <Modal show={show}>
             <form noValidate onSubmit={saveRoom} className={submitted ? 'was-validated' : ''}>
                 <div className='modal-header'>
-                    <h5 className='modal-title'>방정보</h5>
+                    <h5 className='modal-title'>방 정보</h5>
                     <button type='button' className='btn-close' onClick={() => setShow(false)}></button>
                 </div>
                 <div className='modal-body'>
                     {errorMessage && <div className='alert alert-danger'>{errorMessage}</div>}
 
                     <div className='form-group'>
-                        <label htmlFor='name'>방 이름: </label>
+                        <label htmlFor='name'>방 이름:</label>
                         <input
                             type='text'
                             name='name'
                             placeholder='방 이름'
                             className='form-control'
-                            value={room?.name}
+                            value={room.name}
                             onChange={handleChange}
                             required
                         />
-                        <div className='invalid-feedback'>방 이름을 적어주십시오.</div>
+                        <div className='invalid-feedback'>방 이름을 입력하세요.</div>
                     </div>
-
                     <div className='form-group'>
-                        <label htmlFor='description'>방 설명: </label>
+                        <label htmlFor='capacity'>최대 수용 인원:</label>
+                        <input
+                            type='number'
+                            name='capacity'
+                            placeholder='인원'
+                            className='form-control'
+                            value={room.capacity}
+                            onChange={handleChange}
+                            required
+                        />
+                        <div className='invalid-feedback'>최대 수용 인원을 입력하세요.</div>
+                    </div>
+                    <div className='form-group'>
+                        <label htmlFor='description'>방 설명:</label>
                         <textarea
                             name='description'
                             placeholder='설명'
                             className='form-control'
-                            value={room?.description}
+                            value={room.description}
                             onChange={handleChange}
                             required
                         />
-                        <div className='invalid-feedback'>설명을 적어주십시오.</div>
+                        <div className='invalid-feedback'>방 설명을 입력하세요.</div>
                     </div>
                     <div className='form-group'>
-                        <label htmlFor='price'>가격: </label>
+                        <label htmlFor='price'>가격:</label>
                         <input
                             type='number'
                             min='1'
@@ -98,7 +112,7 @@ const RoomSave = forwardRef((props, ref) => {
                             name='price'
                             placeholder='가격'
                             className='form-control'
-                            value={room?.price}
+                            value={room.price}
                             onChange={handleChange}
                             required
                         />
