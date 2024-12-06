@@ -1,5 +1,5 @@
-export default class Reserve {
-    constructor(rsvId, username, roomId, checkIn, checkOut,
+export default class Reservation {
+    constructor(rsvId, username, roomId, checkIn, checkOut, totalPrice,
                  status, createdAt, updatedAt) {
       /**예약 고유 ID (PK)**/
       this.rsvId=rsvId;
@@ -9,6 +9,7 @@ export default class Reserve {
       this.roomId = roomId;
       this.checkIn = checkIn;
       this.checkOut = checkOut;
+      this.totalPrice = totalPrice;
       /**ENUM('대기', '완료', '취소')**/
       this.status = status;
       this.createdAt =createdAt;

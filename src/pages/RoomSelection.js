@@ -1,84 +1,101 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import DatePicker from "react-datepicker"; // react-datepicker 임포트
-import "react-datepicker/dist/react-datepicker.css"; // 스타일 임포트
-import './RoomSelection.css';
-import { reserveRoom } from "../store/actions/reserveRoom";
-import {ko} from "date-fns/esm/locale";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import "./RoomSelection.css";
+
+import roomService from "../services/room.service"; // API 호출용 서비스
 
 const RoomSelection = () => {
-  const [dates, setDates] = useState([new Date(), new Date()]); // 체크인, 체크아웃 날짜 배열
+  const [dates, setDates] = useState([new Date(), new Date()]);
+  const [roomList, setRoomList] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const user = useSelector(state => state.user);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-
-  const handleDateChange = (dates) => {
-    setDates(dates);
-    console.log("선택된 날짜:", dates); // 선택된 날짜를 콘솔에 출력
-  };
+  useEffect(() => {
+    // 방 목록 불러오기
+    roomService
+      .getAllRooms()
+      .then((response) => setRoomList(response.data))
+      .catch((error) => console.error("방 목록 불러오기 오류:", error));
+  }, []);
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
+    setErrorMessage(""); // 오류 메시지 초기화
   };
 
-  const handleReserve = () => {
-    if (!user) {
-      setErrorMessage("로그인 후 예약이 가능합니다.");
-      return;
-    }
-    if (!selectedRoom) {
+  const handleProceedToPayment = () => {
+    if (!selectedRoom || !selectedRoom.id) { // selectedRoom 객체가 유효한지 체크
       setErrorMessage("방을 선택해 주세요.");
       return;
     }
-
-    // 예약 데이터 저장
-    const reservationData = {
-      userId: user.id,
-      roomId: selectedRoom.id,
-      checkIn: dates[0],
-      checkOut: dates[1],
-    };
-
-    dispatch(reserveRoom(reservationData));
+    if (dates[0] >= dates[1]) {
+      setErrorMessage("체크아웃 날짜는 체크인 날짜 이후여야 합니다.");
+      return;
+    }
+  
+    // 결제 페이지로 이동
+    navigate("/payment", {
+      state: {
+        room: selectedRoom,
+        checkIn: dates[0],
+        checkOut: dates[1],
+      },
+    });
   };
 
   return (
-    <div className="roomSelection">
-      <h1>예약</h1>
+    <div className="reservation-page">
+      <h1>방 선택</h1>
 
+      {/* 날짜 선택 */}
       <div className="calendar">
-        {/* DatePicker로 교체 */}
         <DatePicker
-          locale={ko}
-          selected={dates[0]} // 체크인 날짜
-          onChange={handleDateChange} // 날짜 변경 처리
-          startDate={dates[0]} // 체크인 날짜
-          endDate={dates[1]} // 체크아웃 날짜
-          selectsRange // 범위 선택 가능
-          inline // 달력을 인라인으로 표시
-          dateFormat="yyyy/MM/dd" // 날짜 형식
-          placeholderText="체크인 / 체크아웃 날짜 선택"
-          
+          selected={dates[0]}
+          onChange={(updatedDates) => setDates(updatedDates)}
+          startDate={dates[0]}
+          endDate={dates[1]}
+          selectsRange
+          inline
+          dateFormat="yyyy/MM/dd"
+          placeholderText="체크인/체크아웃 날짜 선택"
         />
       </div>
 
-      <div className="room-selection">
-        <h2>방 선택</h2>
-        {/* 예시 방 목록 */}
-        {["남자 전용", "여자 전용", "혼성"].map((room, index) => (
-          <button key={index} onClick={() => handleRoomSelect({ id: index + 1, name: room })}>
-            {room}
-          </button>
-        ))}
+      {/* 방 목록 */}
+      <div className="room-list">
+  <h2>방 목록</h2>
+  {roomList.length > 0 ? (
+    roomList.map((room) => (
+      <div
+        key={room.id}
+        className={`room-card ${selectedRoom?.id === room.id ? "selected" : ""}`}
+        onClick={() => handleRoomSelect(room)}
+      >
+        <div className="room-card-header">
+          <h3>{room.name}</h3>
+          <p className="room-price">{room.price}원</p>
+        </div>
+        <div className="room-card-body">
+          <p><strong>최대 수용인원:</strong> {room.capacity}명</p>
+          <p><strong>설명:</strong> {room.description}</p>
+        </div>
       </div>
+    ))
+  ) : (
+    <p>방 정보를 불러오는 중입니다...</p>
+  )}
+</div>
 
-      <div className="reserve-button">
-        <button onClick={handleReserve}>예약하기</button>
+      {/* 오류 메시지 */}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+      {/* 결제 이동 버튼 */}
+      <div className="proceed-button">
+        <button onClick={handleProceedToPayment}>결제하기로 이동</button>
       </div>
-
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>
   );
 };

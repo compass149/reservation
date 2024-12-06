@@ -12,6 +12,7 @@ import AuthGuard from './guards/AuthGuard';
 import { Role } from './models/Role';
 import Admin from './pages/admin/Admin';
 import RoomSelection from './pages/RoomSelection';
+import Payment from "./pages/Payment";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/join' element={<Join />}></Route>
           <Route path="/roomSelection" element={<RoomSelection />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path='/admin' element={
             <AuthGuard roles={[Role.ADMIN]}>
               <Admin />

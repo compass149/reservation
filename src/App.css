@@ -1,3 +1,12 @@
+/* 컬러 테마  */
+/* 
+올리브 #898C2B
+견과류색 #736055
+회색 #BFBBBA
+흰색 #F2F2F2
+검정 #0D0D0D 
+*/
+
 .App {
   text-align: center;
 }
@@ -14,18 +23,18 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #898C2B;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #F2F2F2;
 }
 
 .App-link {
-  color: #61dafb;
+  color: #736055;
 }
 
 @keyframes App-logo-spin {
