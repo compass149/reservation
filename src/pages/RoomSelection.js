@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"; 
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,12 +9,18 @@ const RoomSelection = () => {
   const [dates, setDates] = useState([new Date(), new Date()]);
   const [roomList, setRoomList] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]); // 필터링된 방 목록
-  const [totalUser, settotalUser] = useState(1); // 예약 인원
+  const [totalUser, setTotalUser] = useState(1); // 예약 인원
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [user, setUser] = useState(null); // 로그인한 사용자 정보
   const navigate = useNavigate();
 
-  // 방 필터링 로직을 useCallback으로 감싸기
+  // 로그인된 사용자의 정보를 가져오는 코드 (예시)
+  useEffect(() => {
+    const loggedInUser = { id: 1, username: "user123" }; // 예시로 가정한 사용자
+    setUser(loggedInUser);
+  }, []);
+
   const filterRooms = useCallback(
     (rooms, userCount, dates) => {
       // 예약된 방 필터링
@@ -29,23 +35,20 @@ const RoomSelection = () => {
     [selectedRoom]
   );
 
-  // 방이 예약된 방인지 체크하는 함수
   const isRoomBooked = (room, dates) => {
-    // 여기서는 예약된 방 목록을 가져와서 확인하는 방식으로 처리합니다.
     const bookedRooms = []; // 이미 예약된 방 목록을 가져오는 API 로직
     return bookedRooms.some((bookedRoom) => 
       bookedRoom.roomId === room.id && 
-      ((bookedRoom.checkIn <= dates[1] && bookedRoom.checkOut >= dates[0])) // 날짜가 겹치는지 확인
+      ((bookedRoom.checkIn <= dates[1] && bookedRoom.checkOut >= dates[0])) 
     );
   };
 
   useEffect(() => {
     const fetchAvailableRooms = async () => {
       try {
-        // 예약된 방 포함한 모든 방 목록을 가져옵니다.
-        const response = await roomService.getAllRooms(); // 예약된 방 정보도 포함된 API 호출
+        const response = await roomService.getAllRooms();
         setRoomList(response.data);
-        filterRooms(response.data, totalUser, dates); // 필터링 호출
+        filterRooms(response.data, totalUser, dates);
       } catch (error) {
         console.error("방 목록 불러오기 오류:", error);
       }
@@ -54,11 +57,11 @@ const RoomSelection = () => {
     if (dates[0] < dates[1]) {
       fetchAvailableRooms();
     }
-  }, [dates, totalUser, filterRooms]); // dates, totalUser, filterRooms 의존성 추가
+  }, [dates, totalUser, filterRooms]);
 
-  const handletotalUserChange = (event) => {
+  const handleTotalUserChange = (event) => {
     const count = parseInt(event.target.value, 10);
-    settotalUser(count);
+    setTotalUser(count);
     filterRooms(roomList, count, dates); // 필터링 호출
   };
 
@@ -68,7 +71,7 @@ const RoomSelection = () => {
   };
 
   const handleProceedToPayment = () => {
-    if (!selectedRoom || !selectedRoom.id) { // selectedRoom 객체가 유효한지 체크
+    if (!selectedRoom || !selectedRoom.id) {
       setErrorMessage("방을 선택해 주세요.");
       return;
     }
@@ -76,14 +79,15 @@ const RoomSelection = () => {
       setErrorMessage("체크아웃 날짜는 체크인 날짜 이후여야 합니다.");
       return;
     }
-  
+
     // 결제 페이지로 이동
     navigate("/payment", {
       state: {
         room: selectedRoom,
         checkIn: dates[0],
         checkOut: dates[1],
-        totalUser: totalUser, // totalUser 값을 state에 포함
+        totalUser: totalUser,
+        user: user, // 로그인한 사용자 정보 전달
       },
     });
   };
@@ -114,7 +118,7 @@ const RoomSelection = () => {
           type="number"
           min="1"
           value={totalUser}
-          onChange={handletotalUserChange}
+          onChange={handleTotalUserChange}
         />
       </div>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import reserveService from "../services/reserve.service"; 
 
 const Payment = () => {
   const location = useLocation();
@@ -10,19 +11,28 @@ const Payment = () => {
       alert("잘못된 정보가 있습니다. 다시 확인해주세요.");
       return;
     }
-
+  
     // 예약 데이터 생성
     const reservationData = {
       roomId: room.id,
       checkIn,
       checkOut,
       totalUser,
-      user: user.id,
+      user: user.id, // 사용자 ID
+      status: "대기", // 상태를 PENDING으로 설정
     };
-
-    // 예약 저장 요청
-    // reserveService.saveReservationService(reservationData).then(...);
+  
+    // 예약 저장 요청 (예약 서비스 호출 예시)
+    reserveService.saveReservationService(reservationData)
+      .then((response) => {
+        console.log("예약이 완료되었습니다:", response.data);
+        // 추가적으로 예약 완료 후 처리할 사항이 있으면 여기에 추가
+      })
+      .catch((error) => {
+        console.error("예약 중 오류가 발생했습니다:", error);
+      });
   };
+
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("ko-KR", {
