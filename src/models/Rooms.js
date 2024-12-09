@@ -1,7 +1,7 @@
 export default class Rooms {
-    constructor(rId, roomName,price ,description, roomType,capacity, createdAt,updatedAt) {
+    constructor(id, roomName,price ,description, roomType,capacity, createdAt,updatedAt) {
       /**방 고유 id (pk)**/
-      this.rId = rId;
+      this.id = id;
       this.roomName = roomName;
       this.description = description;
       this.price = price;
