@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react"; 
 import { useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -9,7 +9,7 @@ const RoomSelection = () => {
   const [dates, setDates] = useState([new Date(), new Date()]);
   const [roomList, setRoomList] = useState([]);
   const [filteredRooms, setFilteredRooms] = useState([]); // 필터링된 방 목록
-  const [totalUsers, setTotalUsers] = useState(1); // 예약 인원
+  const [totalUser, settotalUser] = useState(1); // 예약 인원
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const RoomSelection = () => {
         // 예약된 방 포함한 모든 방 목록을 가져옵니다.
         const response = await roomService.getAllRooms(); // 예약된 방 정보도 포함된 API 호출
         setRoomList(response.data);
-        filterRooms(response.data, totalUsers, dates); // 필터링 호출
+        filterRooms(response.data, totalUser, dates); // 필터링 호출
       } catch (error) {
         console.error("방 목록 불러오기 오류:", error);
       }
@@ -54,11 +54,11 @@ const RoomSelection = () => {
     if (dates[0] < dates[1]) {
       fetchAvailableRooms();
     }
-  }, [dates, totalUsers, filterRooms]); // dates, totalUsers, filterRooms 의존성 추가
+  }, [dates, totalUser, filterRooms]); // dates, totalUser, filterRooms 의존성 추가
 
-  const handleTotalUsersChange = (event) => {
+  const handletotalUserChange = (event) => {
     const count = parseInt(event.target.value, 10);
-    setTotalUsers(count);
+    settotalUser(count);
     filterRooms(roomList, count, dates); // 필터링 호출
   };
 
@@ -83,6 +83,7 @@ const RoomSelection = () => {
         room: selectedRoom,
         checkIn: dates[0],
         checkOut: dates[1],
+        totalUser: totalUser, // totalUser 값을 state에 포함
       },
     });
   };
@@ -112,8 +113,8 @@ const RoomSelection = () => {
           id="user-count"
           type="number"
           min="1"
-          value={totalUsers}
-          onChange={handleTotalUsersChange}
+          value={totalUser}
+          onChange={handletotalUserChange}
         />
       </div>
 

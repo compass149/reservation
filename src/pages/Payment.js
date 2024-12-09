@@ -1,30 +1,27 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import reserveService from "../services/reserve.service";
 
 const Payment = () => {
   const location = useLocation();
-  const { room, checkIn, checkOut } = location.state || {};
+  const { room, checkIn, checkOut, totalUser, user } = location.state || {};
 
   const handleConfirmPayment = () => {
+    if (!room || !checkIn || !checkOut || totalUser === undefined || !user) {
+      alert("잘못된 정보가 있습니다. 다시 확인해주세요.");
+      return;
+    }
+
     // 예약 데이터 생성
     const reservationData = {
       roomId: room.id,
       checkIn,
       checkOut,
+      totalUser,
+      user: user.id,
     };
 
     // 예약 저장 요청
-    reserveService
-      .saveReservationService(reservationData)
-      .then(() => {
-        alert("결제가 완료되었습니다. 예약이 확인되었습니다.");
-        // 추가적인 결제 성공 처리 로직
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("결제 중 오류가 발생했습니다.");
-      });
+    // reserveService.saveReservationService(reservationData).then(...);
   };
 
   const formatDate = (date) => {
@@ -46,7 +43,8 @@ const Payment = () => {
       <p>선택한 방: {room.name}</p>
       <p>체크인 날짜: {formatDate(checkIn)}</p>
       <p>체크아웃 날짜: {formatDate(checkOut)}</p>
-      <p>가격: {room.price}원</p>
+      <p>예약 인원: {totalUser}</p>
+      <p>가격: {totalUser * room.price}원</p>
       <button onClick={handleConfirmPayment}>결제 완료</button>
     </div>
   );
