@@ -21,7 +21,7 @@ const RoomDelete=forwardRef((props, ref)=>{
 				<button type='button' className='btn-close' onClick={() => setShow(false)}></button>
 			</div>
 
-			<div className='modal-body'>정말로 이 제품을 삭제하겠습니까?</div>
+			<div className='modal-body'>정말로 이 방을 삭제하겠습니까?</div>
 
 			<div className='modal-footer'>
 				<button type='button' className='btn btn-secondary' onClick={() => setShow(false)}>

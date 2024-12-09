@@ -1,9 +1,10 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { Modal } from 'react-bootstrap';
 import roomService from "../services/room.service";
+import Rooms from "../models/Rooms";
 
 const RoomSave = forwardRef((props, ref) => {
-    const [room, setRoom] = useState({ name: '', description: '', price: 50000, capacity: 4 });
+    const [room, setRoom] = useState(new Rooms(0,'',0,'','',0));
     const [errorMessage, setErrorMessage] = useState('');
     const [show, setShow] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -14,15 +15,9 @@ const RoomSave = forwardRef((props, ref) => {
         },
     }));
 
-    useEffect(() => {
-        if (props.room) {
-            setRoom({
-                name: props.room.name || '',
-                description: props.room.description || '',
-                price: props.room.price || 0,
-                capacity: props.room.capacity || 0,
-            });
-        }
+    useEffect(()=>{
+        setRoom(props.room);
+        console.log(props.room);
     }, [props.room]);
 
     const saveRoom = (e) => {
