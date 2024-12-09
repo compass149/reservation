@@ -1,0 +1,25 @@
+/* Profile.css */
+.profile-page {
+    padding: 20px;
+  }
+  
+  .reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .reservation-table th, .reservation-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .reservation-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  

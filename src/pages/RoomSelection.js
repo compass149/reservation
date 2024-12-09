@@ -15,25 +15,26 @@ const RoomSelection = () => {
   const [user, setUser] = useState(null); // 로그인한 사용자 정보
   const navigate = useNavigate();
 
-  // 로그인된 사용자의 정보를 가져오는 코드 (예시)
+  // 실제 로그인된 사용자의 정보를 가져오는 코드
   useEffect(() => {
-    const loggedInUser = { id: 1, username: "user123" }; // 예시로 가정한 사용자
-    setUser(loggedInUser);
-  }, []);
+    const loggedInUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (loggedInUser) {
+      setUser(loggedInUser);
+    } else {
+      navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 이동
+    }
+  }, [navigate]); // navigate에 의존하여 변경
 
-  const filterRooms = useCallback(
-    (rooms, userCount, dates) => {
-      // 예약된 방 필터링
-      const filtered = rooms.filter((room) => room.capacity >= userCount && !isRoomBooked(room, dates));
-      setFilteredRooms(filtered);
+  const filterRooms = useCallback((rooms, userCount, dates) => {
+    // 예약된 방 필터링
+    const filtered = rooms.filter((room) => room.capacity >= userCount && !isRoomBooked(room, dates));
+    setFilteredRooms(filtered);
 
-      // 선택한 방 초기화 (필터링 후 이전 선택한 방이 없어질 수 있음)
-      if (selectedRoom && !filtered.some((room) => room.id === selectedRoom.id)) {
-        setSelectedRoom(null);
-      }
-    },
-    [selectedRoom]
-  );
+    // 선택한 방 초기화 (필터링 후 이전 선택한 방이 없어질 수 있음)
+    if (selectedRoom && !filtered.some((room) => room.id === selectedRoom.id)) {
+      setSelectedRoom(null);
+    }
+  }, [selectedRoom]); // selectedRoom에 의존
 
   const isRoomBooked = (room, dates) => {
     const bookedRooms = []; // 이미 예약된 방 목록을 가져오는 API 로직
@@ -57,7 +58,7 @@ const RoomSelection = () => {
     if (dates[0] < dates[1]) {
       fetchAvailableRooms();
     }
-  }, [dates, totalUser, filterRooms]);
+  }, [dates, totalUser, filterRooms]); // dates와 totalUser에 의존하여 업데이트
 
   const handleTotalUserChange = (event) => {
     const count = parseInt(event.target.value, 10);

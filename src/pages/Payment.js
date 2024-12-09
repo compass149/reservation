@@ -1,9 +1,10 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom"; // useNavigate 추가
 import reserveService from "../services/reserve.service"; 
 
 const Payment = () => {
   const location = useLocation();
+  const navigate = useNavigate();  // useNavigate 훅 사용
   const { room, checkIn, checkOut, totalUser, user } = location.state || {};
 
   const handleConfirmPayment = () => {
@@ -18,7 +19,7 @@ const Payment = () => {
       checkIn,
       checkOut,
       totalUser,
-      user: user.id, // 사용자 ID
+      user: user.uid, // 사용자 ID
       status: "대기", // 상태를 PENDING으로 설정
     };
   
@@ -26,13 +27,13 @@ const Payment = () => {
     reserveService.saveReservationService(reservationData)
       .then((response) => {
         console.log("예약이 완료되었습니다:", response.data);
-        // 추가적으로 예약 완료 후 처리할 사항이 있으면 여기에 추가
+        // 예약 완료 후 프로필 페이지로 이동
+        navigate("/profile");
       })
       .catch((error) => {
         console.error("예약 중 오류가 발생했습니다:", error);
       });
   };
-
 
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("ko-KR", {

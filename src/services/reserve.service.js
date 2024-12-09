@@ -9,7 +9,7 @@ class ReserveService{
         return axios.post(API_URL, reserve, {headers:authHeader()});
     }
 
-    getAllReservations(){
+    getAllReservation(){
         return axios.get(API_URL,{headers:authHeader()});
     }
 }
