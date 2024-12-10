@@ -1,48 +1,63 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import roomService from "../services/room.service"; // API 호출용 서비스
+import roomService from "../services/room.service";
 import "./RoomSelection.css";
 
+const STORAGE_KEY = "roomSelectionState";
+
 const RoomSelection = () => {
-  const [dates, setDates] = useState([new Date(), new Date()]);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const parseDates = (savedDates) => {
+    if (!savedDates || savedDates.length < 2) return [new Date(), new Date()];
+    return [new Date(savedDates[0]), new Date(savedDates[1])];
+  };
+
+  const savedState = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || {};
+
+  const initialDates = location.state?.dates 
+    ? parseDates(location.state.dates) 
+    : savedState.dates 
+      ? parseDates(savedState.dates) 
+      : [new Date(), new Date()];
+
+  const initialUserCount = location.state?.totalUser || savedState.totalUser || 1;
+
+  const [dates, setDates] = useState(initialDates);
   const [roomList, setRoomList] = useState([]);
-  const [filteredRooms, setFilteredRooms] = useState([]); // 필터링된 방 목록
-  const [totalUser, setTotalUser] = useState(1); // 예약 인원
+  const [filteredRooms, setFilteredRooms] = useState([]);
+  const [totalUser, setTotalUser] = useState(initialUserCount);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [user, setUser] = useState(null); // 로그인한 사용자 정보
-  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
 
-  // 실제 로그인된 사용자의 정보를 가져오는 코드
   useEffect(() => {
     const loggedInUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (loggedInUser) {
-      setUser(loggedInUser);
+    if (!loggedInUser) {
+      navigate("/login");
     } else {
-      navigate("/login"); // 로그인되지 않은 경우 로그인 페이지로 이동
+      setUser(loggedInUser);
     }
-  }, [navigate]); // navigate에 의존하여 변경
+  }, [navigate]);
+
+  const isRoomBooked = useCallback((room, dates) => {
+    const bookedRooms = []; 
+    return bookedRooms.some((bookedRoom) => bookedRoom.roomId === room.id &&
+      bookedRoom.checkIn <= dates[1] && bookedRoom.checkOut >= dates[0]);
+  }, []);
 
   const filterRooms = useCallback((rooms, userCount, dates) => {
-    // 예약된 방 필터링
-    const filtered = rooms.filter((room) => room.capacity >= userCount && !isRoomBooked(room, dates));
+    const filtered = rooms.filter(
+      (room) => room.capacity >= userCount && !isRoomBooked(room, dates)
+    );
     setFilteredRooms(filtered);
-
-    // 선택한 방 초기화 (필터링 후 이전 선택한 방이 없어질 수 있음)
     if (selectedRoom && !filtered.some((room) => room.id === selectedRoom.id)) {
       setSelectedRoom(null);
     }
-  }, [selectedRoom]); // selectedRoom에 의존
-
-  const isRoomBooked = (room, dates) => {
-    const bookedRooms = []; // 이미 예약된 방 목록을 가져오는 API 로직
-    return bookedRooms.some((bookedRoom) => 
-      bookedRoom.roomId === room.id && 
-      ((bookedRoom.checkIn <= dates[1] && bookedRoom.checkOut >= dates[0])) 
-    );
-  };
+  }, [selectedRoom, isRoomBooked]);
 
   useEffect(() => {
     const fetchAvailableRooms = async () => {
@@ -55,20 +70,20 @@ const RoomSelection = () => {
       }
     };
 
-    if (dates[0] < dates[1]) {
+    if (dates[0] instanceof Date && dates[1] instanceof Date && dates[0] < dates[1]) {
       fetchAvailableRooms();
     }
-  }, [dates, totalUser, filterRooms]); // dates와 totalUser에 의존하여 업데이트
+  }, [dates, totalUser, filterRooms]);
 
   const handleTotalUserChange = (event) => {
     const count = parseInt(event.target.value, 10);
     setTotalUser(count);
-    filterRooms(roomList, count, dates); // 필터링 호출
+    filterRooms(roomList, count, dates);
   };
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
-    setErrorMessage(""); // 오류 메시지 초기화
+    setErrorMessage("");
   };
 
   const handleProceedToPayment = () => {
@@ -76,19 +91,35 @@ const RoomSelection = () => {
       setErrorMessage("방을 선택해 주세요.");
       return;
     }
-    if (dates[0] >= dates[1]) {
+    if (!(dates[0] instanceof Date && dates[1] instanceof Date && dates[0] < dates[1])) {
       setErrorMessage("체크아웃 날짜는 체크인 날짜 이후여야 합니다.");
       return;
     }
 
-    // 결제 페이지로 이동
     navigate("/payment", {
       state: {
         room: selectedRoom,
         checkIn: dates[0],
         checkOut: dates[1],
         totalUser: totalUser,
-        user: user, // 로그인한 사용자 정보 전달
+        user: user,
+      },
+    });
+  };
+
+  const handleRoomDetail = (e, roomId) => {
+    e.stopPropagation();
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        dates: [dates[0].toISOString(), dates[1].toISOString()],
+        totalUser
+      })
+    );
+    navigate(`/roomInfo/${roomId}`, {
+      state: {
+        dates: [dates[0].toISOString(), dates[1].toISOString()],
+        totalUser: totalUser,
       },
     });
   };
@@ -96,8 +127,6 @@ const RoomSelection = () => {
   return (
     <div className="reservation-page">
       <h1>방 선택</h1>
-
-      {/* 날짜 선택 */}
       <div className="calendar">
         <DatePicker
           selected={dates[0]}
@@ -111,7 +140,6 @@ const RoomSelection = () => {
         />
       </div>
 
-      {/* 인원 선택 */}
       <div className="user-count">
         <label htmlFor="user-count">예약 인원: </label>
         <input
@@ -123,7 +151,6 @@ const RoomSelection = () => {
         />
       </div>
 
-      {/* 방 목록 */}
       <div className="room-list">
         <h2>방 목록</h2>
         {filteredRooms.length > 0 ? (
@@ -137,9 +164,22 @@ const RoomSelection = () => {
                 <h3>{room.name}</h3>
                 <p className="room-price">{room.price.toLocaleString()}원</p>
               </div>
+              {room.imageUrls && (
+                <div className="room-image">
+                  <img src={room.imageUrls} alt={room.name} style={{ width: "200px", height: "auto" }} />
+                </div>
+              )}
               <div className="room-card-body">
                 <p><strong>최대 수용인원:</strong> {room.capacity}명</p>
                 <p><strong>설명:</strong> {room.description}</p>
+              </div>
+              <div className="room-detail-link" style={{ textAlign: "right" }}>
+                <span
+                  style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
+                  onClick={(e) => handleRoomDetail(e, room.id)}
+                >
+                  자세히
+                </span>
               </div>
             </div>
           ))
@@ -148,10 +188,8 @@ const RoomSelection = () => {
         )}
       </div>
 
-      {/* 오류 메시지 */}
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      {/* 결제 이동 버튼 */}
       <div className="proceed-button">
         <button onClick={handleProceedToPayment}>결제하기로 이동</button>
       </div>

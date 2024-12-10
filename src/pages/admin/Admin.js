@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom"; // Link 추가
 import roomService from "../../services/room.service";
 import RoomSave from "../../components/RoomSave";
 import RoomDelete from "../../components/RoomDelete";
@@ -6,7 +7,7 @@ import "./Admin.css"
 
 const Admin = () => {
     const [roomList, setRoomList] = useState([]);
-    const [selectedRoom, setSelectedRoom] = useState(null); // 초기값을 null로 설정
+    const [selectedRoom, setSelectedRoom] = useState(null); 
     const saveComponent = useRef();
     const [errorMessage, setErrorMessage] = useState('');
     const deleteComponent = useRef();
@@ -18,6 +19,7 @@ const Admin = () => {
     }, []);
 
     const createRoomRequest = () => {
+        setSelectedRoom(null);
         saveComponent.current?.showRoomModal();
     };
 
@@ -44,7 +46,7 @@ const Admin = () => {
     };
 
     const deleteRoom = () => {
-        if (!selectedRoom) return; // selectedRoom이 null일 경우 방어 코드 추가
+        if (!selectedRoom) return; 
         roomService
             .deleteRoom(selectedRoom)
             .then((_) => {
@@ -88,7 +90,11 @@ const Admin = () => {
                             {roomList.map((item, ind) => (
                                 <tr key={item.id}>
                                     <th scope="row">{ind + 1}</th>
-                                    <td>{item.name}</td>
+                                    <td>
+                                        <Link to={`/roominfo/${item.id}`} style={{ textDecoration: 'none', color: 'blue' }}>
+                                            {item.name}
+                                        </Link>
+                                    </td>
                                     <td>{`${item.price}원`}</td>
                                     <td>{item.capacity}</td>
                                     <td>{new Date(item.createdAt).toLocaleDateString()}</td>

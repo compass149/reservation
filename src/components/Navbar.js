@@ -1,5 +1,4 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import logo from '../logo.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearCurrentUser } from '../store/actions/user';
 import { Role } from '../models/Role';
@@ -11,6 +10,9 @@ const Navbar = () => {
     const naviget=useNavigate();
 
     const logout=() =>{
+          // 인증 토큰 삭제 등의 로직...
+        localStorage.removeItem("currentUser"); 
+        sessionStorage.removeItem("roomSelectionState"); // 여기서 상태 초기화
         dispatch(clearCurrentUser());
         naviget("/login")
     }
