@@ -1,0 +1,29 @@
+.image-slider button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: gray;
+    cursor: pointer;
+    font-size: 24px;
+    z-index: 2; /* 버튼이 항상 위에 표시되도록 */
+    height: 60px; /* 클릭 영역 높이 증가 */
+    width: 40px; /* 클릭 영역 너비 */
+    padding: 0;
+    margin: 0;
+    line-height: 60px; /* 텍스트 정렬 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent; /* 투명한 배경 */
+  }
+  
+  .image-slider .prev-button {
+    left: 10px; /* 이미지의 왼쪽 근처에 위치 */
+  }
+  
+  .image-slider .next-button {
+    right: 10px; /* 이미지의 오른쪽 근처에 위치 */
+  }
+  

@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom"; // useNavigate 추가
 import reserveService from "../services/reserve.service"; 
+import "./Payment.css"
 
 const Payment = () => {
   const location = useLocation();
@@ -56,7 +57,7 @@ const Payment = () => {
       <p>체크아웃 날짜: {formatDate(checkOut)}</p>
       <p>예약 인원: {totalUser}</p>
       <p>가격: {totalUser * room.price}원</p>
-      <button onClick={handleConfirmPayment}>결제 완료</button>
+      <button className="btn btn-primary" onClick={handleConfirmPayment}>결제 완료</button>
     </div>
   );
 };

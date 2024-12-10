@@ -14,6 +14,7 @@ const Admin = () => {
 
     useEffect(() => {
         roomService.getAllRooms().then((response) => {
+            console.log("Fetched rooms:", response.data);
             setRoomList(response.data);
         });
     }, []);

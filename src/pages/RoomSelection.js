@@ -4,6 +4,11 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import roomService from "../services/room.service";
 import "./RoomSelection.css";
+import ImageSlider from "./ImageSlider";
+import { BASE_API_URL } from "../common/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
+
 
 const STORAGE_KEY = "roomSelectionState";
 
@@ -159,21 +164,31 @@ const RoomSelection = () => {
               key={room.id}
               className={`room-card ${selectedRoom?.id === room.id ? "selected" : ""}`}
               onClick={() => handleRoomSelect(room)}
-            >
+            >              
               <div className="room-card-header">
                 <h3>{room.name}</h3>
                 <p className="room-price">{room.price.toLocaleString()}원</p>
               </div>
-              {room.imageUrls && (
-                <div className="room-image">
-                  <img src={room.imageUrls} alt={room.name} style={{ width: "200px", height: "auto" }} />
-                </div>
-              )}
+              
+              <div className="room-image">
+                {room.imageUrls && room.imageUrls.length > 0 ? (
+                  <ImageSlider
+                    imageUrls={room.imageUrls.map(
+                      (fileName) => `${BASE_API_URL}/api/room/uploads/${fileName}`
+                    )}
+                  />
+                ) : (
+                  <div className="icon-container">
+                    <FontAwesomeIcon icon={faImage} className="user-icon" />
+                  </div>
+                )}
+              </div>
+
               <div className="room-card-body">
-                <p><strong>최대 수용인원:</strong> {room.capacity}명</p>
+                <p style={{marginTop : "30px"}}><strong>최대 수용인원:</strong> {room.capacity}명</p>
                 <p><strong>설명:</strong> {room.description}</p>
               </div>
-              <div className="room-detail-link" style={{ textAlign: "right" }}>
+              <div className="room-detail-link">
                 <span
                   style={{ color: "gray", textDecoration: "underline", cursor: "pointer" }}
                   onClick={(e) => handleRoomDetail(e, room.id)}
@@ -191,7 +206,7 @@ const RoomSelection = () => {
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
       <div className="proceed-button">
-        <button onClick={handleProceedToPayment}>결제하기로 이동</button>
+        <button className="btn btn-primary" onClick={handleProceedToPayment}>결제하기로 이동</button>
       </div>
     </div>
   );

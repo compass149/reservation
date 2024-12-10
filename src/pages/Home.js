@@ -8,7 +8,7 @@ export default function Home() {
     <div className="container">
       <h1 className="title">예약</h1>
       <Link to="/roomSelection">  {/* react-router-dom Link로 페이지 이동 */}
-        <button className="button">예약하러 가기</button>
+        <button className="btn btn-primary">예약하러 가기</button>
       </Link>
     </div>
   );
