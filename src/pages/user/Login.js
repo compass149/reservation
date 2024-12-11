@@ -99,7 +99,7 @@ const Login=()=>{
               </button>
             </form>
     
-            <Link to="/join" className="btn btn-link" style={{ color: 'darkgray' }}>
+            <Link to="/join" className="btn btn-link" style={{ color: 'darkgray', backgroundColor:"transparent" }}>
               새 계정 만들기
             </Link>
           </div>

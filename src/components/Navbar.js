@@ -7,15 +7,15 @@ import "./Navbar.css"
 const Navbar = () => {
     const currentUser=useSelector((state) => state.user);
     const dispatch=useDispatch();
-    const naviget=useNavigate();
+    const navigate=useNavigate();
 
     const logout=() =>{
           // 인증 토큰 삭제 등의 로직...
         localStorage.removeItem("currentUser"); 
         sessionStorage.removeItem("roomSelectionState"); // 여기서 상태 초기화
         dispatch(clearCurrentUser());
-        naviget("/login")
-    }
+        navigate('/login');
+    };
     return(
         <nav className='navbar navbar-expand'>
             <div className='container'>
@@ -48,7 +48,6 @@ const Navbar = () => {
                         <li className='nav-item'>
                             <a href="##" className='nav-link' onClick={logout}>로그아웃</a>
                         </li>
-                    
                     </div>
                 )}
             </div>

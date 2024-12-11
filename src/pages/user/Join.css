@@ -81,11 +81,14 @@ h4 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    background-color: #898C2B;
 }
-
+.btn:hover {
+    background :#777925;
+}
 .btn-primary {
     background: #898C2B;
-    color: #F2F2F2;
+    color: #777925;
 }
 
 .btn-primary:hover {

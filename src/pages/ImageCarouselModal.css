@@ -32,7 +32,10 @@
     border: none;
     font-size: 24px;
     cursor: pointer;
+    padding: 10px; /* 버튼에 패딩을 추가하여 클릭 영역 확장 */
+    z-index: 2;
   }
+  
   
   .modal-carousel-container {
     position: relative;

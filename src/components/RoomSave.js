@@ -6,7 +6,7 @@ import Rooms from "../models/Rooms";
 const MAX_FILE_SIZE = 30 * 1024 * 1024; // 30MB
 
 const RoomSave = forwardRef((props, ref) => {
-    const [room, setRoom] = useState(new Rooms(0,'',0,'','',0));
+    const [room, setRoom] = useState(new Rooms(0, '', 0, '', '', 0));
     const [errorMessage, setErrorMessage] = useState('');
     const [show, setShow] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -19,8 +19,8 @@ const RoomSave = forwardRef((props, ref) => {
         },
     }));
 
-    useEffect(()=> {
-        const initialRoom = props.room || new Rooms(0,'',0,'','',0);
+    useEffect(() => {
+        const initialRoom = props.room || new Rooms(0, '', 0, '', '', 0);
         setRoom(initialRoom);
         setFiles([]);
         setPreviewUrls(initialRoom.imageUrls ? initialRoom.imageUrls.map(url => `${process.env.REACT_APP_BASE_URL}/uploads/${url}`) : []);
@@ -28,7 +28,7 @@ const RoomSave = forwardRef((props, ref) => {
     }, [props.room]);
 
     const resetForm = () => {
-        setRoom(new Rooms(0,'',0,'','',0));
+        setRoom(new Rooms(0, '', 0, '', '', 0));
         setFiles([]);
         setPreviewUrls([]);
         setSubmitted(false);
@@ -44,7 +44,15 @@ const RoomSave = forwardRef((props, ref) => {
         e.preventDefault();
         setSubmitted(true);
 
+        // 필수 입력값 확인
         if (!room.name || !room.description || room.price <= 0 || room.capacity <= 0) {
+            return;
+        }
+
+        // 이미지 파일 타입 확인
+        const invalidFiles = files.filter(file => !file.type.startsWith("image/"));
+        if (invalidFiles.length > 0) {
+            setErrorMessage("이미지만 업로드해주십시오.");
             return;
         }
 
@@ -96,6 +104,15 @@ const RoomSave = forwardRef((props, ref) => {
         const oversized = selectedFiles.some(file => file.size > MAX_FILE_SIZE);
         if (oversized) {
             setErrorMessage('최대 30MB까지만 업로드 가능합니다.');
+            setFiles([]);
+            setPreviewUrls([]);
+            return;
+        }
+
+        // 파일 타입 체크
+        const nonImageFiles = selectedFiles.filter(file => !file.type.startsWith("image/"));
+        if (nonImageFiles.length > 0) {
+            setErrorMessage('이미지만 업로드해주십시오.');
             setFiles([]);
             setPreviewUrls([]);
             return;
@@ -179,7 +196,7 @@ const RoomSave = forwardRef((props, ref) => {
                             multiple
                         />
                         {previewUrls.length > 0 && (
-                            <div className="mt-2" style={{display:'flex', flexWrap:'wrap', gap:'10px'}}>
+                            <div className="mt-2" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                 {previewUrls.map((url, index) => (
                                     <img key={index} src={url} alt={room.name} style={{ width: '100px', height: 'auto' }} />
                                 ))}

@@ -13,11 +13,19 @@
     background-color: transparent;
   }
   /* 히어로 섹션 */
-  .hero-section, .no-image-hero {
+  .hero-section {
     /* height: 60vh; */
     overflow: hidden;
     position: relative;
   }
+  .no-image-hero {
+  height: 60vh;
+  background-color: #ced4da; /* 필요에 따라 배경색 설정 가능 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
   
   .hero-section img {
     object-fit: cover;
