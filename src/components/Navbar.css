@@ -1,5 +1,5 @@
 .navbar{
-    background-color: #898C2B;
+    background-color: #60621E ;
     color: #F2F2F2;
 }
 
@@ -7,6 +7,10 @@
     color: #F2F2F2; 
 }
 
+.nav-link:hover {
+    color: #50C73E; 
+}
+
 .nav-link.nav-link.active{
-    color: #0D0D0D; 
+    color: #E4EA48; 
 }

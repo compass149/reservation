@@ -1,13 +1,19 @@
-// src/pages/RoomInfo.js
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import roomService from '../services/room.service';
+import { BASE_API_URL } from "../common/constants";
+import ImageSlider from "./ImageSlider";
+import ImageCarouselModal from "./ImageCarouselModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage, faUsers, faBed } from "@fortawesome/free-solid-svg-icons";
+import "./RoomInfo.css";
 
 const RoomInfo = () => {
   const { id } = useParams();
   const [room, setRoom] = useState(null);
   const [error, setError] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalStartIndex, setModalStartIndex] = useState(0);
 
   useEffect(() => {
     roomService.getRoomById(id)
@@ -21,38 +27,82 @@ const RoomInfo = () => {
   }, [id]);
 
   if (error) {
-    return <div className="container mt-5"><div className="alert alert-danger">{error}</div></div>;
+    return (
+      <div className="container mt-5">
+        <div className="alert alert-danger">{error}</div>
+      </div>
+    );
   }
 
   if (!room) {
-    return <div className="container mt-5"><p>로딩 중...</p></div>;
+    return (
+      <div className="container mt-5 d-flex justify-content-center align-items-center" style={{height: '50vh'}}>
+        <div className="spinner-border" role="status"><span className="visually-hidden">로딩 중...</span></div>
+      </div>
+    );
   }
 
-  const images = room.images || []; // room.images가 이미지 배열이라고 가정
+  const imageUrls = room.imageUrls && room.imageUrls.length > 0
+    ? room.imageUrls.map(fileName => `${BASE_API_URL}/api/room/uploads/${fileName}`)
+    : [];
 
-  const prevImage = () => {
-    setCurrentIndex((prevIndex) => prevIndex === 0 ? images.length - 1 : prevIndex - 1);
+  const handleImageClick = (index) => {
+    setModalStartIndex(index);
+    setIsModalOpen(true);
   };
 
-  const nextImage = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
-    <div className="container mt-5">
-      <h2>{room.name}</h2>
-      <p>최대 수용 인원: {room.capacity}명</p>
-      <p>가격: {room.price}원</p>
-      <p>설명: {room.description}</p>
-
-      {images.length > 0 && (
-        <div className="image-slider" style={{ position: 'relative', width: '300px', height: '200px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <img src={images[currentIndex]} alt="Room" style={{ width: '100%', height: 'auto' }} />
+    <div className="room-info-container">
+      <div className="hero-section position-relative">
+        {imageUrls.length > 0 ? (
+          <ImageSlider
+            className="hero-section"
+            imageUrls={imageUrls}
+            onImageClick={handleImageClick}
+            showArrows={true}  // RoomInfo에서만 화살표 표시
+          />
+        ) : (
+          <div className="no-image-hero d-flex justify-content-center align-items-center">
+            <FontAwesomeIcon icon={faImage} className="no-image-icon" />
           </div>
-          <button style={{ position: 'absolute', left: 0, top: '50%' }} onClick={prevImage}>‹</button>
-          <button style={{ position: 'absolute', right: 0, top: '50%' }} onClick={nextImage}>›</button>
+        )}
+        <div className="hero-overlay d-flex flex-column justify-content-end p-4">
+          <h1 className="text-white fw-bold display-6 mb-1">{room.name}</h1>
+          <span className="text-white fw-bold fs-5">
+            <FontAwesomeIcon icon={faBed} className="me-2" />
+            {room.price.toLocaleString()}원 / 1박
+          </span>
         </div>
+      </div>
+      
+      <div className="container mt-4">
+        <div className="card shadow-sm">
+          <div className="card-body p-4">
+            <div className="d-flex mb-3">
+              <div className="me-3 text-secondary">
+                <FontAwesomeIcon icon={faUsers} className="me-2"/>
+                최대 {room.capacity}명
+              </div>
+              <div className="text-secondary">
+                <FontAwesomeIcon icon={faBed} className="me-2"/>
+                {room.price.toLocaleString()}원 / 1박
+              </div>
+            </div>
+            <p className="text-muted mb-4">{room.description}</p>
+          </div>
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <ImageCarouselModal
+          imageUrls={imageUrls}
+          initialIndex={modalStartIndex}
+          onClose={handleCloseModal}
+        />
       )}
     </div>
   );

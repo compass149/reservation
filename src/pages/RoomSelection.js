@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import roomService from "../services/room.service";
 import "./RoomSelection.css";
@@ -8,8 +8,10 @@ import ImageSlider from "./ImageSlider";
 import { BASE_API_URL } from "../common/constants";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
+import ko from "date-fns/locale/ko"; // 한국어 로케일 가져오기
 
-
+// 한국어 로케일 등록
+registerLocale("ko", ko);
 const STORAGE_KEY = "roomSelectionState";
 
 const RoomSelection = () => {
@@ -131,9 +133,10 @@ const RoomSelection = () => {
 
   return (
     <div className="reservation-page">
-      <h1>방 선택</h1>
+      <h3 className="title">📆 체크인 & 체크아웃 날짜 선택 📆</h3>
       <div className="calendar">
         <DatePicker
+          locale="ko"
           selected={dates[0]}
           onChange={(updatedDates) => setDates(updatedDates)}
           startDate={dates[0]}
@@ -146,7 +149,7 @@ const RoomSelection = () => {
       </div>
 
       <div className="user-count">
-        <label htmlFor="user-count">예약 인원: </label>
+        <label htmlFor="user-count"><strong>예약 인원 : </strong></label>
         <input
           id="user-count"
           type="number"
@@ -155,9 +158,14 @@ const RoomSelection = () => {
           onChange={handleTotalUserChange}
         />
       </div>
-
+      <div className="proceed-button" style={{ textAlign: "right", marginRight:"20px" }}>
+        {selectedRoom && (
+          <button className="btn btn-primary" onClick={handleProceedToPayment}>
+            예약하기
+          </button>
+        )}
+      </div>
       <div className="room-list">
-        <h2>방 목록</h2>
         {filteredRooms.length > 0 ? (
           filteredRooms.map((room) => (
             <div
@@ -199,15 +207,14 @@ const RoomSelection = () => {
             </div>
           ))
         ) : (
-          <p>조건에 맞는 방이 없습니다.</p>
+          <div className="no-rooms-message">
+          </div>
         )}
       </div>
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <div className="proceed-button">
-        <button className="btn btn-primary" onClick={handleProceedToPayment}>결제하기로 이동</button>
-      </div>
+      
     </div>
   );
 };
