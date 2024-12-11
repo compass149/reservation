@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import roomService from '../../services/room.service'; // 수정된 서비스
-import './Profile.css'; // 스타일 파일
+import roomService from '../../services/room.service';
+import './Profile.css';
 
 const Profile = () => {
-    const [reservation, setReservation] = useState([]);  // 초기값을 빈 배열로 설정
+    const [reservation, setReservation] = useState([]);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-  
+
     const user = JSON.parse(localStorage.getItem("currentUser"));
     console.log(user);
 
     useEffect(() => {
         const currentUser = localStorage.getItem("currentUser");
         if (!currentUser) {
-          console.error("No current user found in localStorage");
-          navigate("/login");
-        } else {
-          const user = JSON.parse(currentUser);
-          console.log("Parsed user object:", user);
-      
-          if (user && user.uid) {
-            fetchReservations(user);
-          } else {
-            console.error("Invalid user object:", user);
+            console.error("No current user found in localStorage");
             navigate("/login");
-          }
+        } else {
+            const user = JSON.parse(currentUser);
+            console.log("Parsed user object:", user);
+
+            if (user && user.uid) {
+                fetchReservations(user);
+            } else {
+                console.error("Invalid user object:", user);
+                navigate("/login");
+            }
         }
     }, [navigate]);
 
@@ -49,7 +49,6 @@ const Profile = () => {
         roomService.cancelReservation(rsvId)
             .then(response => {
                 alert("예약이 취소되었습니다.");
-                // 예약 목록 다시 불러오기
                 const user = JSON.parse(localStorage.getItem("currentUser"));
                 fetchReservations(user);
             })
@@ -58,46 +57,55 @@ const Profile = () => {
                 alert("예약 취소 중 오류가 발생했습니다.");
             });
     };
-      
+
+    const formatDateWithDay = (dateString) => {
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'Invalid Date';
+        const formattedDate = date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        const weekday = date.toLocaleDateString('ko-KR', { weekday: 'short' });
+        return `${formattedDate} (${weekday})`;
+    };
+
     return (
-      <div className="profile-page">
-        <h1>내 예약 목록</h1>
-  
-        {error && <p className="error-message">{error}</p>}
-  
-        {reservation.length > 0 ? (
-          <table className="reservation-table">
-            <thead>
-              <tr>
-                <th>순번</th>
-                <th>방 이름</th>
-                <th>체크인</th>
-                <th>체크아웃</th>
-                <th>예약 상태</th>
-                <th>취소</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reservation.map((r) => (
-                <tr key={r.rsvId}>
-                  <td>{r.rsvId}</td>
-                  <td>{r.roomName}</td>
-                  <td>{new Date(r.checkIn).toLocaleDateString()}</td>
-                  <td>{new Date(r.checkOut).toLocaleDateString()}</td>
-                  <td>{r.status}</td>
-                  <td>
-                    {r.status !== '취소' && (
-                      <button onClick={() => handleCancel(r.rsvId)}>취소</button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>예약 내역이 없습니다.</p>
-        )}
-      </div>
+        <div className="container card mt-5">
+            <div className="card-header">
+                <div className="col-6"><h3>내 예약 목록</h3></div>
+            </div>
+            {error && <p className="alert alert-danger error-message">{error}</p>}
+
+            {reservation.length > 0 ? (
+                <table className="card-body table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">순번</th>
+                            <th scope="col">방 이름</th>
+                            <th scope="col">체크인</th>
+                            <th scope="col">체크아웃</th>
+                            <th scope="col">예약 상태</th>
+                            <th scope="col">취소</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {reservation.map((r) => (
+                            <tr key={r.rsvId}>
+                                <td>{r.rsvId}</td>
+                                <td>{r.roomName}</td>
+                                <td>{formatDateWithDay(r.checkIn)}</td>
+                                <td>{formatDateWithDay(r.checkOut)}</td>
+                                <td>{r.status}</td>
+                                <td>
+                                    {r.status !== '취소' && (
+                                        <button className="btn btn-primary me-1" onClick={() => handleCancel(r.rsvId)}>취소</button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>예약 내역이 없습니다.</p>
+            )}
+        </div>
     );
 };
 
