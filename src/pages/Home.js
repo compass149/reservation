@@ -6,7 +6,7 @@ import RoomSelection from './RoomSelection';
 export default function Home() {
   return (
     <div className="container">
-      <h1 className="title">예약</h1>
+      <h1 className="title">🗓️예약🗓️</h1>
       <Link to="/roomSelection">  {/* react-router-dom Link로 페이지 이동 */}
         <button className="btn btn-primary">예약하러 가기</button>
       </Link>
