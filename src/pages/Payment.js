@@ -37,27 +37,38 @@ const Payment = () => {
   };
 
   const formatDate = (date) => {
-    return new Intl.DateTimeFormat("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      weekday: "long",
-    }).format(new Date(date));
+    const options = { year: "numeric", month: "long", day: "numeric", weekday: "short" };
+    const formatter = new Intl.DateTimeFormat("ko-KR", options);
+  
+    const parts = formatter.formatToParts(new Date(date));
+    let formattedDate = "";
+    let weekday = "";
+  
+    parts.forEach((part) => {
+      if (part.type === "weekday") {
+        weekday = part.value; // 요일만 추출
+      } else {
+        formattedDate += part.value; // 날짜 부분 조합
+      }
+    });
+  
+    return `${formattedDate} (${weekday})`;
   };
-
   if (!room) {
     return <div>잘못된 접근입니다. 방을 선택해주세요.</div>;
   }
 
   return (
     <div className="payment-page">
-      <h1>결제 페이지</h1>
-      <p>선택한 방: {room.name}</p>
-      <p>체크인 날짜: {formatDate(checkIn)}</p>
-      <p>체크아웃 날짜: {formatDate(checkOut)}</p>
-      <p>예약 인원: {totalUser}</p>
-      <p>가격: {totalUser * room.price}원</p>
-      <button className="btn btn-primary" onClick={handleConfirmPayment}>결제 완료</button>
+      <div className="payment-card">
+      <h1 className="payment-title">결제 페이지</h1>
+      <p><strong>선택한 방</strong>: {room.name}</p>
+      <p><strong>체크인</strong>: {formatDate(checkIn)}</p>
+      <p><strong>체크아웃</strong>: {formatDate(checkOut)}</p>
+      <p><strong>예약 인원</strong>: {totalUser}</p>
+      <p><strong>가격</strong>: {totalUser * room.price}원</p>
+      <button className="btn btn-primary" onClick={handleConfirmPayment}>결제하기</button>
+    </div>
     </div>
   );
 };

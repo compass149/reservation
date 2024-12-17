@@ -15,3 +15,64 @@
 .btn-primary:hover {
     background: #777925;
 }
+/* src/pages/user/Payment.css */
+
+/* 전체 페이지 스타일 */
+.payment-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+    margin: 0;
+  }
+  
+  /* 카드 형태로 디자인 */
+  .payment-card {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+  }
+  
+  .payment-title {
+    font-size: 2.1rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #343a40;
+  }
+  
+  /* 상세 정보 스타일 */
+  .payment-details {
+    text-align: left;
+    margin-top: 4.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .payment-details p {
+    margin: 1.5rem 0;
+    font-size: 1rem;
+    color: #495057;
+  }
+  
+  .payment-details span {
+    font-weight: bold;
+    color: #212529;
+  }
+  
+  .total-amount {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #e03131;
+    margin-top: 1rem;
+  }
+  
+  /* 에러 메시지 스타일 */
+  .error-message {
+    color: #e03131;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: 2rem;
+  } 
