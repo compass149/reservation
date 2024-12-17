@@ -1,15 +1,17 @@
 import { CLEAR_CURRENT_USER, SET_CURRENT_USER } from "../types";
 
-const userReducer=(state={}, action) => {
-    switch(action?.type){
+// 초기 상태를 정의
+const initialState = JSON.parse(localStorage.getItem('currentUser')) || null;
+
+const userReducer = (state = initialState, action) => {
+    switch (action?.type) {
         case SET_CURRENT_USER:
-            localStorage.setItem('currentUser', JSON.stringify(action?.payload));
-            return action?.payload;
+            return action?.payload; // 상태만 반환
         case CLEAR_CURRENT_USER:
-            localStorage.removeItem("currentUser");
-            return null;
+            return null; // 상태를 null로 설정
         default:
-            return JSON.parse(localStorage.getItem('currentUser'));
+            return state;
     }
 };
+
 export default userReducer;

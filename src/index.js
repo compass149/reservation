@@ -4,8 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './store/configStore';
-import {Provider} from 'react-redux';
 import { persistor } from './store/configStore';
+import {Provider} from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { handelResponseWithLoginCheck } from './services/base.service';
 
@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate persistor={persistor}>
+      <PersistGate persistor={persistor} loading={null}>
        <App />
       </PersistGate>
     </Provider>
