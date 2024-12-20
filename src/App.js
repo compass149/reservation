@@ -12,8 +12,10 @@ import AuthGuard from './guards/AuthGuard';
 import { Role } from './models/Role';
 import Admin from './pages/admin/Admin';
 import RoomSelection from './pages/RoomSelection';
-import Payment from "./pages/Payment";
+import Payment from './pages/payment/Payment';
 import RoomInfo from './pages/RoomInfo'; // 추가
+import KakaoPaySuccess from './pages/payment/KakaoPaySuccess';
+
 
 function App() {
   return (
@@ -28,6 +30,7 @@ function App() {
             <Route path='/join' element={<Join />}></Route>
             <Route path="/roomSelection" element={<RoomSelection />} />
             <Route path="/payment" element={<Payment />} />
+            <Route path="/kakaoPaySuccess" element={<KakaoPaySuccess />} />
             <Route path='/admin' element={
               <AuthGuard roles={[Role.ADMIN]}>
                 <Admin />
