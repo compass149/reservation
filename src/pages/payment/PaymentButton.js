@@ -5,61 +5,52 @@ const PaymentButton = ({ reservationData }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  // Validate the reservationData object first
-  const { agent, openType } = reservationData;
-
-  if (!agent || !openType) {
-    return (
-      <div style={{ color: "red" }}>
-        잘못된 요청입니다. agent와 openType 값을 확인해주세요.
-      </div>
-    );
-  }
-
   const handlePayment = async () => {
     setLoading(true);
     setErrorMessage(null);
 
     try {
-      // Send POST request with agent and openType values
+      // 결제 준비 API 호출
       const response = await axios.post(
-        `http://localhost:8082/api/payment/ready/${agent}/${openType}`
+        `http://localhost:8082/api/payment/ready/${reservationData.agent}/${reservationData.openType}`
       );
 
-      // Check if the response contains redirection URLs for different agents
-      if (response.data.redirectUrl) {
-        // For mobile, redirect to the mobile payment page
-        window.location.href = response.data.redirectUrl;
-      } else if (response.data.webviewUrl) {
-        // For app, use a webview to display the payment page
-        window.location.href = response.data.webviewUrl;
-      } else {
-        // For PC, log the full response
-        console.log(response.data);
-      }
+      // 카카오페이 결제 창 열기
+      const popup = window.open(
+        "",
+        "paypopup",
+        "width=426,height=510,toolbar=no,scrollbars=no,resizable=no"
+      );
 
-      setLoading(false);
+      if (popup) {
+        // 서버 응답에서 next_redirect_pc_url 로 이동
+        popup.location.href = response.data.next_redirect_pc_url;
+      } else {
+        throw new Error("팝업을 열 수 없습니다. (Popup Blocked)");
+      }
     } catch (error) {
-      setLoading(false);
-      setErrorMessage("결제 준비 중 오류가 발생했습니다. 다시 시도해주세요.");
       console.error("결제 준비 중 오류 발생:", error);
+      setErrorMessage(
+        error?.response?.data ??
+          "결제 준비 요청 중 문제가 발생했습니다. 다시 시도해주세요."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div>
-      <button 
-        onClick={handlePayment} 
-        className="btn btn-primary" 
+      <button
+        onClick={handlePayment}
+        className="btn btn-primary"
         disabled={loading}
       >
         {loading ? "결제 준비 중..." : "결제하기"}
       </button>
 
       {errorMessage && (
-        <div style={{ color: "red", marginTop: "10px" }}>
-          {errorMessage}
-        </div>
+        <div style={{ color: "red", marginTop: "10px" }}>{errorMessage}</div>
       )}
     </div>
   );
