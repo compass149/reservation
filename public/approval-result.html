@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>승인 결과</title>
+  <!-- React 및 ReactDOM CDN -->
+  <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // ApprovalResult 컴포넌트 정의
+    const ApprovalResult = ({ response }) => {
+      const closePopup = () => {
+        if (window.opener) {
+          window.opener.location.href = "/";
+        }
+        window.close();
+      };
+
+      return React.createElement("div", { style: { textAlign: "center", marginTop: "50px" } },
+        React.createElement("h1", null, "승인 결과 (Result of Approval)"),
+        React.createElement("p", null, response),
+        React.createElement("button", {
+          onClick: closePopup,
+          style: {
+            marginTop: "20px",
+            padding: "10px 20px",
+            fontSize: "16px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          },
+        }, "Close")
+      );
+    };
+
+    // 서버 또는 부모 창에서 전달받은 데이터 (예시로 하드코딩)
+    const response = "결제가 성공적으로 승인되었습니다.";
+
+    // ReactDOM을 사용해 컴포넌트를 렌더링
+    ReactDOM.render(
+      React.createElement(ApprovalResult, { response }),
+      document.getElementById("root")
+    );
+  </script>
+</body>
+</html>

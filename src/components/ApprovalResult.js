@@ -1,7 +1,6 @@
 import React from "react";
 
 const ApprovalResult = ({ response }) => {
-  // 팝업 닫기 및 부모 페이지 새로고침
   const closePopup = () => {
     if (window.opener) {
       window.opener.location.href = "/";
