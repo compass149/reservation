@@ -20,7 +20,7 @@ const Payment = () => {
   // 필수 데이터가 없을 경우
   if (!room || !checkIn || !checkOut || !totalUser) {
     return <div>잘못된 접근입니다. 예약 정보를 확인해주세요.</div>;
-  }
+  } 
 
   // 결제 정보 설정
   const reservationData = {
