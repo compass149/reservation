@@ -30,9 +30,10 @@ const Payment = () => {
     userId: user?.uid || "guest",
     checkIn: formatDate(checkIn), // 문자열로 변환
     checkOut: formatDate(checkOut), // 문자열로 변환
-    totalUser,
+    totalUser:3,
     itemName: room.roomName,
     totalAmount: totalUser * room.pricePerNight,
+    rsvId:11,
   };
 
   return (

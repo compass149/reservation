@@ -12,7 +12,10 @@ const PaymentButton = ({ reservationData }) => {
     try {
       // 결제 준비 API 호출
       const response = await axios.post(
-        `http://localhost:8082/api/payment/ready/${reservationData.agent}/${reservationData.openType}`
+        `http://localhost:8082/api/payment/ready/${reservationData.agent}/${reservationData.openType}`,
+        {
+          rsvId: reservationData.rsvId  // 실제 키/필드명에 맞추기
+        }
       );
 
       // 카카오페이 결제 창 열기

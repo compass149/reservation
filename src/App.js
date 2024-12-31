@@ -15,7 +15,7 @@ import RoomSelection from './pages/RoomSelection';
 import Payment from './pages/payment/Payment';
 import RoomInfo from './pages/RoomInfo'; // 추가
 import KakaoPaySuccess from './pages/payment/KakaoPaySuccess';
-import ApprovalResult from './pages/payment/ApprovalResult'; // ApprovalResult 컴포넌트 추가
+import ApprovalResult from './components/ApprovalResult';
 
 function App() {
   return (
