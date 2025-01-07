@@ -68,6 +68,28 @@
     color: #e03131;
     margin-top: 1rem;
   }
+  /* 표 스타일링 (예시) */
+.payment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 1rem;
+}
+
+.payment-table th,
+.payment-table td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: left;
+}
+
+.payment-table thead {
+  background-color: #f3f3f3;
+}
+
+.payment-page h1 {
+  margin-bottom: 20px;
+}
   
   /* 에러 메시지 스타일 */
   .error-message {

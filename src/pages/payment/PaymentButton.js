@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const PaymentButton = ({ reservationData }) => {
+const PaymentButton = ({ reservationData, rsvId }) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -14,9 +14,13 @@ const PaymentButton = ({ reservationData }) => {
       const response = await axios.post(
         `http://localhost:8082/api/payment/ready/${reservationData.agent}/${reservationData.openType}`,
         {
-          rsvId: reservationData.rsvId  // 실제 키/필드명에 맞추기
+          rsvId: reservationData.rsvId,  // 실제 키/필드명에 맞추기
+          itemName: reservationData.itemName,
+        totalAmount: reservationData.totalAmount,
+        userId: reservationData.userId,
         }
       );
+      console.log("예약아이디----------------", rsvId )
 
       // 카카오페이 결제 창 열기
       const popup = window.open(
