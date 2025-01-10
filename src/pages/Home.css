@@ -1,15 +1,20 @@
-.home-card{
+/* 기존에 있던 스타일은 그대로 두고, 이미지 관련 스타일 추가 */
+
+.home-card {
     width: 300px;
-    background-color:#F2F2F2 ;
+    background-color:#F2F2F2;
 }
-.product-icon{
+
+.product-icon {
     font-size: 100px;
     color: #898C2B;
 }
 
-input{
+input {
     width: 50px;
 }
+
+/* 버튼 스타일 */
 .btn {
     padding: 10px 15px;
     font-size: 16px;
@@ -26,4 +31,23 @@ input{
 
 .btn-primary:hover {
     background: #777925;
+}
+
+/* 여기서부터 이미지 레이아웃 관련 스타일 */
+.image-container {
+    display: flex;             /* 가로로 일렬 배치 */
+    justify-content: center;   /* 수평 중앙 정렬 */
+    align-items: center;       /* 수직 중앙 정렬 */
+    gap: 20px;                 /* 이미지 간격 */
+    margin-bottom: 20px;       /* 아래 요소와 간격 */
+    flex-wrap: wrap;           /* 화면 크기에 따라 자동 줄바꿈 */
+}
+
+/* 이미지 자체 스타일 */
+.home-img {
+    width: 70%;             /* 한 줄에 3장 정도 들어가게 조정(화면 크기에 따라 적절히 조절) */
+    min-width: 200px;       /* 너무 작아지지 않도록 최소 너비 */
+    height: auto;           
+    border-radius: 10px;    /* 모서리를 둥글게 */
+    object-fit: cover;      /* 이미지 비율 유지하며 잘림 방지 */
 }
