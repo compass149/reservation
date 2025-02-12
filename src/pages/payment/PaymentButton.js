@@ -16,8 +16,8 @@ const PaymentButton = ({ reservationData, rsvId }) => {
         {
           rsvId: reservationData.rsvId,  // 실제 키/필드명에 맞추기
           itemName: reservationData.itemName,
-        totalAmount: reservationData.totalAmount,
-        userId: reservationData.userId,
+          totalAmount: reservationData.totalAmount,
+          userId: reservationData.userId,
         }
       );
       console.log("예약아이디----------------", rsvId )

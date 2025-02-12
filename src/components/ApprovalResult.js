@@ -19,23 +19,32 @@ const ApprovalResult = () => {
       }
 
       try {
-        const response = await axios.get(
-          `http://localhost:8082/api/payment/approve/${agent}/${openType}?pg_token=${pgToken}`
-        );
-        setApprovalResult(response.data);
+        // 결제 승인 요청
+        // const response = await axios.get(
+        const url = `http://localhost:8082/api/payment/approve/${agent}/${openType}?pg_token=${pgToken}`;
+        axios.get(url)
+              .then(response => {
+                console.log(response.data);
+              })          
+        // if (response.status === 200) {
+        //   // 결제 승인 성공
+        //   setApprovalResult(response.data);
+        // }
       } catch (err) {
+        // 오류 처리
         setError(err.response?.data || "결제 승인 중 오류가 발생했습니다.");
       }
     };
 
     fetchApprovalResult();
-  }, [pgToken, agent, openType]);
+  }, [pgToken, agent, openType]); // rsvId를 의존성 배열에 추가
 
+  // 팝업 닫기
   const closePopup = () => {
     if (window.opener) {
       window.opener.location.reload(); // 부모 창 새로고침
     }
-    window.close();
+    window.close(); // 팝업 창 닫기
   };
 
   return (
